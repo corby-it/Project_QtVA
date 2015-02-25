@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VAMainWindow</class>
+ <widget class="QMainWindow" name="VAMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1250</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>VA Project - Action Recognition</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <item row="0" column="2">
+     <widget class="QGroupBox" name="boxFrameResized">
+      <property name="title">
+       <string>Frame Resized</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="labelFrameResized">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 0, 0);</string>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="boxFrame">
+      <property name="title">
+       <string>Original Frame</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="labelFrame">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 0, 0);</string>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="boxBs">
+      <property name="title">
+       <string>Background Subtraction</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="labelBS">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 0, 0);</string>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="boxPD">
+      <property name="title">
+       <string>People Detection</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QLabel" name="labelPD">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 0, 0);</string>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QGroupBox" name="boxOptions">
+      <property name="title">
+       <string>Tools</string>
+      </property>
+      <widget class="QPushButton" name="buttonStartProcessing">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Start Processing</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>X Histogram</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="labelHistoX">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 0, 0);</string>
+           </property>
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string>Y Histogram</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QLabel" name="labelHistoY">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 0, 0);</string>
+           </property>
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1250</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionApri_Video"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout_VA_Project"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <action name="actionApri_Video">
+   <property name="text">
+    <string>Open Video</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionAbout_VA_Project">
+   <property name="text">
+    <string>About VA Project...</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
