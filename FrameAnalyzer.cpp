@@ -42,9 +42,9 @@ FrameAnalyzer::FrameAnalyzer(string videoFilename, std::string C, int mog)
 		frameResized = Mat3b(STD_SIZE.height, 250);
 
 		// crea le finestre dell'interfaccia
-		namedWindow("Frame");
-		namedWindow("FG Mask MOG");
-		namedWindow("Background Subtraction and People Detector");
+//		namedWindow("Frame");
+//		namedWindow("FG Mask MOG");
+//		namedWindow("Background Subtraction and People Detector");
 
 		// impostazione del background suppressor
 		switch (mogType){
@@ -139,26 +139,7 @@ FrameAnalyzer::FrameAnalyzer(string videoFilename, std::string C, int mog)
 		tot_classified = 0;
 
 		//Creo vettore con etichette per prestazioni
-		for(int i=0;i<84;++i)
-			performance.push_back("bend"); 
-		for(int i=0;i<89;++i) 
-			performance.push_back("jack");
-		for(int i=0;i<67;++i) 
-			performance.push_back("jump");
-		for(int i=0;i<62;++i) 
-			performance.push_back("pjump");
-		for(int i=0;i<42;++i) 
-			performance.push_back("run");
-		for(int i=0;i<53;++i) 
-			performance.push_back("side");
-		for(int i=0;i<57;++i) 
-			performance.push_back("skip");
-		for(int i=0;i<84;++i) 
-			performance.push_back("walk");
-		for(int i=0;i<82;++i) 
-			performance.push_back("wave1");
-		for(int i=0;i<81;++i) 
-			performance.push_back("wave2");
+        fillGroundTruth(performance, filename, "groundTruth.txt");
 
 }
 
@@ -505,8 +486,8 @@ bool FrameAnalyzer::processFrame() {
 
 
 				// Disegna gli istogrammi
-				for(size_t i=0; i<histogramImages.size(); ++i)
-					imshow("Histogram "+to_string(i+1), histogramImages[i]);
+//				for(size_t i=0; i<histogramImages.size(); ++i)
+//					imshow("Histogram "+to_string(i+1), histogramImages[i]);
 			}
 
 
@@ -514,10 +495,10 @@ bool FrameAnalyzer::processFrame() {
 	}
 
 	//show the current frame and the fg masks
-	imshow("Frame", frame);
-	imshow("frameResized", frameResized);
-	imshow("FG Mask MOG - Silhouette", fgMaskMOG);
-	imshow("Background Subtraction and People Detector", frameDrawn);
+//	imshow("Frame", frame);
+//	imshow("frameResized", frameResized);
+//	imshow("FG Mask MOG - Silhouette", fgMaskMOG);
+//	imshow("Background Subtraction and People Detector", frameDrawn);
 
 	return true;
 }
