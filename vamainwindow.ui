@@ -180,7 +180,7 @@
 color: rgb(2, 170, 77);</string>
           </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string>--</string>
           </property>
          </widget>
         </item>
@@ -201,7 +201,7 @@ color: rgb(2, 170, 77);</string>
 color: rgb(2, 170, 77);</string>
           </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string>--</string>
           </property>
          </widget>
         </item>
@@ -225,7 +225,14 @@ color: rgb(2, 170, 77);</string>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="editLk"/>
+         <widget class="QLineEdit" name="editLk">
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -261,7 +268,11 @@ color: rgb(2, 170, 77);</string>
         </rect>
        </property>
        <property name="text">
-        <string>Start Processing</string>
+        <string>Start</string>
+       </property>
+       <property name="icon">
+        <iconset resource="qtva.qrc">
+         <normaloff>:/qtva/icons/play.png</normaloff>:/qtva/icons/play.png</iconset>
        </property>
       </widget>
       <widget class="QPushButton" name="buttonStopProcessing">
@@ -274,7 +285,11 @@ color: rgb(2, 170, 77);</string>
         </rect>
        </property>
        <property name="text">
-        <string>Stop processing</string>
+        <string>Pause</string>
+       </property>
+       <property name="icon">
+        <iconset resource="qtva.qrc">
+         <normaloff>:/qtva/icons/pause.png</normaloff>:/qtva/icons/pause.png</iconset>
        </property>
       </widget>
      </widget>
@@ -325,6 +340,8 @@ color: rgb(2, 170, 77);</string>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="qtva.qrc"/>
+ </resources>
  <connections/>
 </ui>

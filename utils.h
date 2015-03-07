@@ -156,7 +156,7 @@ void computeFeatureVector ( cv::Mat &frame, int bins, std::vector<double> &featu
 
 void writeFeatureVectorToFile (std::string category, std::string outFileName, std::vector<double> featureVector)
 {
-    //BUG correggere l'errore di compilazione su CreateDirectory!!
+    //BUG correggere l'errore di compilazione su CreateDirectory!! Per ora non ci dovrebbe comunque servire
 
 	// Memento: se la directory è già esistente, CreateDirectory fallisce silenziosamente
 //    bool flag = CreateDirectory("training", NULL);

@@ -11,6 +11,8 @@
 #include <cstdint>
 #include <cstdlib>
 
+#include <QString>
+
 #include "FrameAnalyzer.h"
 #include "dirent.h"
 #include "utils.h"
@@ -36,7 +38,13 @@ FrameAnalyzer::FrameAnalyzer(string videoFilename, std::string C, int mog)
 		avgBsTime = 0;
 		avgPdTime = 0;
 
-        lk_thresh = 0;
+        lk_thresh = 50;
+
+        result = "nullo";
+        correctClassification = false;
+        correctPerc = 0;
+
+        outputBuffer = "";
 
 		// Inizializzazione utile nel caso non trovi contorni
 		frameResized = Mat3b(STD_SIZE.height, 250);
@@ -198,16 +206,35 @@ Mat& FrameAnalyzer::getHistoY(){
     return histoY;
 }
 
+QString FrameAnalyzer::getCurrentClass(){
+    return QString(result.data());
+}
+
+bool FrameAnalyzer::isCorrectClassification(){
+    return correctClassification;
+}
+
+double FrameAnalyzer::getCurrentPerc(){
+    return correctPerc;
+}
+
+QString FrameAnalyzer::getOutputBuffer(){
+    return QString::fromStdString(outputBuffer);
+}
+
 // Ritorna true se è andato tutto bene, false se non è riuscita a leggere un frame (cioè il video è finito)
 bool FrameAnalyzer::processFrame() {
 
 	//cerr << endl << "FILE: " << filename << endl;
 	//cerr << "CURRENT FRAME: " << getCurrentFramePos() << " / " << getFrameCount() << "\t";
 
+    // resetto il buffer di output che fa da output su console sulla GUI
+    outputBuffer = "";
+
 	//read the current frame
 	if(!capture.read(frame)) {
 		cerr << "Video terminato." << endl;
-		return false; //Altrimenti esce di botto
+        return false;
 	}
 
 	// Resize dei frame in input alla dimensione standard
@@ -430,38 +457,49 @@ bool FrameAnalyzer::processFrame() {
 					//computeFeatureVector ( fgMaskMOG, closestRect, numberBins, featureVector, histogramImages, createThe2HistogramImages );
 				}
 				else{
-					double maxLk = DBL_MIN;
-					string maxClass = "";
 
 					if (vHMMTester.size() < windowNum && (testCount % windowsStep)==0){
                         vHMMTester.push_back(HMMTester(vhmm, class_action, rand()%100, filename, lk_thresh));
 					}
 
 					for (size_t i=0; i<vHMMTester.size(); ++i){
-						string res = vHMMTester[i].testingHMM(featureVector);
+                         string res = vHMMTester[i].testingHMM(featureVector, outputBuffer);
 						//cout << "Confronto: " << res << " e " << performance[getCurrentFramePos()] << endl;
-						if(res.compare("nullo") == 0){
+                        if(res.compare("nullo") == 0){
 						} 
 						//Confronto etichetta data di mezza finestra prima con classificazione data
-						else{//se ho almeno tot frame
+                        else{ //se ho almeno tot frame
 							//res potrebbe terminare con un numero per via dei nomi del dataset, elimino questa possibilità
-							char c = (char)res[res.size()-1];
-							if( (c>48 && c<57) && res.compare("wave1") != 0 && res.compare("wave2") != 0){
-								res = res.substr(0, res.size()-1);
-								cout << res << endl;
+                            char c = (char)res[res.size()-1];
+                            if( (c>48 && c<57) && res.compare("wave1") != 0 && res.compare("wave2") != 0){
+                                res = res.substr(0, res.size()-1);
+                                cout << res << endl;
 							}
-							if(res.compare(performance[getCurrentFramePos()-(windowSize/2)]) == 0){
+
+                            stringstream ss;
+
+                            if(res.compare(performance[getCurrentFramePos()-(windowSize/2)]) == 0){
+                                correctClassification = true;
 								ok++;
 								tot_classified++;
-								if(tot_classified!=0 /*&& (getCurrentFramePos() == getFrameCount())*/)
-									cout << "CORRETTO:\t" << ok << "/" << tot_classified << "\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
-								printLog("out_log.txt", res, performance[getCurrentFramePos()-(windowSize/2)]);
+                                if(tot_classified!=0 /*&& (getCurrentFramePos() == getFrameCount())*/){
+                                    ss << "CORRETTO:\t" << ok << "/" << tot_classified << "\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
+                                }
+                                printLog("out_log.txt", res, performance[getCurrentFramePos()-(windowSize/2)]);
 							}
-							else if(res.compare(performance[getCurrentFramePos()-(windowSize/2)]) != 0){
+                            else if(res.compare(performance[getCurrentFramePos()-(windowSize/2)]) != 0){
+                                correctClassification = false;
 								tot_classified++;
-								cout << "ERRORE" << "\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
-								printLog("out_log.txt", res, performance[getCurrentFramePos()-(windowSize/2)]);
+                                ss << "ERRORE" << "\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
+                                printLog("out_log.txt", res, performance[getCurrentFramePos()-(windowSize/2)]);
 							}
+
+                            cout << ss.str();
+
+                            // substr per togliere un \n alla fine di ss
+                            this->outputBuffer.append(ss.str().substr(0, ss.str().length()-1));
+                            this->result = res;
+                            this->correctPerc = ((double)ok/(double)tot_classified)*100;
 						}
 
 						/*pair<double,string> c = vHMMTester[i].getClassification();

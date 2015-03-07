@@ -7,10 +7,15 @@
 #include <qtimer.h>
 #include <qmessagebox.h>
 #include <qfiledialog.h>
+#include <QValidator>
+
 #include "conversionutility.h"
 
 using namespace cv;
 using namespace std;
+
+const QString VAMainWindow::styleOk = QString("font: 75 14pt \"Ubuntu\"; color: rgb(2, 170, 77);");
+const QString VAMainWindow::styleErr = QString("font: 75 14pt \"Ubuntu\"; color: rgb(170, 0, 0);");
 
 VAMainWindow::VAMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::VAMainWindow)
 {
@@ -31,8 +36,15 @@ VAMainWindow::VAMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::VA
     ui->statusBar->setSizeGripEnabled(false);
 
     ui->buttonStartProcessing->setEnabled(false);
+    ui->buttonStopProcessing->setEnabled(false);
+
+    ui->editLk->setValidator(new QIntValidator(0, 200, this));
+    ui->editLk->setEnabled(false);
+
+    ui->labelClass->setStyleSheet(styleOk);
 
     connect(ui->buttonStartProcessing, SIGNAL(clicked()), this, SLOT(onButtonStartProcessingClicked()));
+    connect(ui->buttonStopProcessing, SIGNAL(clicked()), this, SLOT(onButtonStopProcessingClicked()));
 
     connect(ui->actionApri_Video, SIGNAL(triggered()), this, SLOT(openFile()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
@@ -55,6 +67,10 @@ void VAMainWindow::openFile()
         frameAnalyzer = new FrameAnalyzer(selectedFile);
         if(frameAnalyzer->isOpened()){
             ui->buttonStartProcessing->setEnabled(true);
+
+            ui->editLk->setEnabled(true);
+            ui->editLk->setText(QString::number(frameAnalyzer->lk_thresh));
+
             progressLabel->setText("Opened video file: "+QString(selectedFile.data()));
         }
 
@@ -70,9 +86,26 @@ void VAMainWindow::onButtonStartProcessingClicked()
     double fps = frameAnalyzer->getFrameRate();
     int interval = 1/fps;
 
+    frameAnalyzer->lk_thresh = ui->editLk->text().toInt();
+
+    ui->editLk->setEnabled(false);
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(processStep()));
     timer->start(interval);
+
+    ui->buttonStopProcessing->setEnabled(true);
+    ui->buttonStartProcessing->setEnabled(false);
+}
+
+void VAMainWindow::onButtonStopProcessingClicked()
+{
+    timer->stop();
+
+    ui->editLk->setEnabled(true);
+
+    ui->buttonStartProcessing->setEnabled(true);
+    ui->buttonStopProcessing->setEnabled(false);
 }
 
 void VAMainWindow::processStep(){
@@ -86,11 +119,31 @@ void VAMainWindow::processStep(){
         msgbox.setText("End of file reached");
         msgbox.exec();
 
+        ui->buttonStartProcessing->setEnabled(true);
+        ui->buttonStopProcessing->setEnabled(false);
+        ui->editLk->setEnabled(true);
+
         // reinizializzo il frameAnalyzer con lo stesso video, così può ripartire
         frameAnalyzer = new FrameAnalyzer(selectedFile);
 
         return;
     }
+
+    bool correct = frameAnalyzer->isCorrectClassification();
+
+    if(frameAnalyzer->getCurrentClass().compare("nullo") != 0){
+        if(correct)
+            ui->labelClass->setStyleSheet(styleOk);
+        else
+            ui->labelClass->setStyleSheet(styleErr);
+
+        ui->labelClass->setText(frameAnalyzer->getCurrentClass());
+    }
+
+    ui->labelPerc->setText(QString::number(frameAnalyzer->getCurrentPerc(), 'f', 2) + "%");
+
+    if(!frameAnalyzer->getOutputBuffer().isEmpty())
+        ui->editConsole->appendPlainText(frameAnalyzer->getOutputBuffer());
 
     progressBar->setValue(frameAnalyzer->getCurrentFramePos());
 

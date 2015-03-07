@@ -244,6 +244,7 @@ public:
 
         editLk = new QLineEdit(horizontalLayoutWidget);
         editLk->setObjectName(QStringLiteral("editLk"));
+        editLk->setLayoutDirection(Qt::LeftToRight);
 
         horizontalLayout->addWidget(editLk);
 
@@ -256,9 +257,15 @@ public:
         buttonStartProcessing = new QPushButton(boxOptions);
         buttonStartProcessing->setObjectName(QStringLiteral("buttonStartProcessing"));
         buttonStartProcessing->setGeometry(QRect(180, 70, 100, 31));
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/qtva/icons/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        buttonStartProcessing->setIcon(icon);
         buttonStopProcessing = new QPushButton(boxOptions);
         buttonStopProcessing->setObjectName(QStringLiteral("buttonStopProcessing"));
         buttonStopProcessing->setGeometry(QRect(290, 70, 100, 31));
+        QIcon icon1;
+        icon1.addFile(QStringLiteral(":/qtva/icons/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+        buttonStopProcessing->setIcon(icon1);
 
         gridLayout->addWidget(boxOptions, 1, 2, 1, 1);
 
@@ -307,13 +314,14 @@ public:
         labelBS->setText(QApplication::translate("VAMainWindow", "TextLabel", 0));
         boxOptions->setTitle(QApplication::translate("VAMainWindow", "Output", 0));
         label_3->setText(QApplication::translate("VAMainWindow", "Classificazione:", 0));
-        labelClass->setText(QApplication::translate("VAMainWindow", "TextLabel", 0));
+        labelClass->setText(QApplication::translate("VAMainWindow", "--", 0));
         label->setText(QApplication::translate("VAMainWindow", "Corretta al:", 0));
-        labelPerc->setText(QApplication::translate("VAMainWindow", "TextLabel", 0));
+        labelPerc->setText(QApplication::translate("VAMainWindow", "--", 0));
         label_2->setText(QApplication::translate("VAMainWindow", "LK Thresh", 0));
+        editLk->setText(QString());
         editConsole->setPlainText(QString());
-        buttonStartProcessing->setText(QApplication::translate("VAMainWindow", "Start Processing", 0));
-        buttonStopProcessing->setText(QApplication::translate("VAMainWindow", "Stop processing", 0));
+        buttonStartProcessing->setText(QApplication::translate("VAMainWindow", "Start", 0));
+        buttonStopProcessing->setText(QApplication::translate("VAMainWindow", "Pause", 0));
         menuFile->setTitle(QApplication::translate("VAMainWindow", "File", 0));
         menuAbout->setTitle(QApplication::translate("VAMainWindow", "About", 0));
     } // retranslateUi

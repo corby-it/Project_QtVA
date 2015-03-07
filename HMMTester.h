@@ -49,7 +49,7 @@ public:
 		return std::pair<double,std::string>(loglk, c); 
 	}
 
-	string HMMTester::testingHMM(std::vector<double> featureVector){
+    string HMMTester::testingHMM(std::vector<double> featureVector, std::string & outputBuffer){
 
 		//-----------------TESTING----------------------
 		//Fatto solo se c'è una bounding box valida (DA OTTIMIZZARE)
@@ -66,7 +66,7 @@ public:
 		if(vFeatures.size() == windowSize){
 
 			//Per ogni HMM trovato nella cartella
-			for(int i=0;i<vHMM.size();++i){
+            for(size_t i=0;i<vHMM.size();++i){
 
 				//Ottengo matrice di transizione
 				cv::Mat_<double> A;
@@ -114,8 +114,15 @@ public:
 			
 			string action_classified = classAction[best].substr(classAction[best].find_first_of("_")+1, classAction[best].length()-classAction[best].find_first_of("_"));
 			if(((max/max_other)*100)>lk_thresh){
-				cout << "CLASSIFICAZIONE: " << action_classified << endl;
-				cout << " SICUREZZA: " << (max/max_other)*100  << endl;
+                std::stringstream ss;
+                ss << "CLASSIFICAZIONE: " << action_classified << endl;
+                ss << "SICUREZZA: " << (max/max_other)*100  << endl;
+
+                cout << ss.str();
+                outputBuffer.append(ss.str());
+
+//                cout << "CLASSIFICAZIONE: " << action_classified << endl;
+//                cout << "SICUREZZA: " << (max/max_other)*100  << endl;
 				return action_classified;
 			}
 

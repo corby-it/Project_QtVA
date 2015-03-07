@@ -14,6 +14,7 @@
 #include <cstring>
 #include <string>
 #include <list>
+#include <QString>
 
 #include "HMMTester.h"
 
@@ -83,6 +84,12 @@ private:
 	int ok;
 	int tot_classified;
 
+    std::string result;
+    bool correctClassification;
+    double correctPerc;
+
+    std::string outputBuffer;
+
 	void drawRectOnFrameDrawn( cv::Rect closestRect, cv::Mat frameDrawn, cv::Scalar color, int thickness, int xOffset);
     std::string getBgName(string filename);
 	void printLog(string nome, string classified, string real);
@@ -98,9 +105,6 @@ public:
 
 	// Categoria del video (BEND, WALK, SIDE ecc) - presa dal file dataset.txt
 	std::string category;
-
-	// costruttore vuoto
-	FrameAnalyzer();
 
 	// costruttore con parametri, il primo è il nome del file da aprire,
 	// il secondo parametro è la categoria dell'azione (BEND, WALK, RUN ecc) presa dal file dataset.txt
@@ -135,8 +139,11 @@ public:
     Mat& getHistoX();
     Mat& getHistoY();
 
-    std::string getCurrentClass();
-    std::string getCurrentPerc();
+    QString getCurrentClass();
+    bool isCorrectClassification();
+    double getCurrentPerc();
+
+    QString getOutputBuffer();
 
     double getFrameRate();
     bool isOpened();

@@ -27,8 +27,12 @@ public:
     explicit VAMainWindow(QWidget *parent = 0);
     ~VAMainWindow();
 
+    static const QString styleOk;
+    static const QString styleErr;
+
 
 private slots:
+    void onButtonStopProcessingClicked();
     void onButtonStartProcessingClicked();
     void processStep();
     void openFile();
