@@ -347,6 +347,7 @@ bool FrameAnalyzer::processFrame() {
 
 
 	// HOG PEOPLE DETECTION ------------------------------------------------------------------------
+    bool ped_found = false;
 	// people detection solo sui frame pari
 	if(((int)capture.get(CV_CAP_PROP_POS_FRAMES)) % 4 == 0)	{
 
@@ -374,6 +375,7 @@ bool FrameAnalyzer::processFrame() {
 		// è più vicino al centroide di movimento (quello che più probabilmente contiene la persona reale),
 		// in questo modo si elimina la possibilità di avere due persone detected in scena.
 		if(found_filtered.size() > 0){
+            ped_found = true;
 
 			xOffset = leftX;
 
@@ -408,6 +410,7 @@ bool FrameAnalyzer::processFrame() {
 		else {
 			// frame pari ma non è stata trovata la persona
 			if((predictionVect.x != 0) || (predictionVect.y!=0)) {
+                ped_found = true;
 				closestRect.x += predictionVect.x;
 				closestRect.y += predictionVect.y;
 				drawRectOnFrameDrawn(closestRect, frameDrawn, GREEN, 4, xOffset);
@@ -418,6 +421,7 @@ bool FrameAnalyzer::processFrame() {
 	else {
 		// frame dispari
 		if((predictionVect.x != 0) || (predictionVect.y!=0)) {
+            ped_found = true;
 			closestRect.x += predictionVect.x;
 			closestRect.y += predictionVect.y;
 			// Disegna il rettangolo sul frame
@@ -431,7 +435,7 @@ bool FrameAnalyzer::processFrame() {
 	findNonZero(fgMaskMOG,nonZeroCoordinates);
 
 	//Controllo che ci siano effettivamente almeno un po' di punti di foreground (soglia manuale magari da migliorare)
-	if(nonZeroCoordinates.rows>=4){
+    if(nonZeroCoordinates.rows>=4 && ped_found){
 		Rect bb = boundingRect(nonZeroCoordinates);		
 		//Controllo che il bb non abbia preso troppo frame (a causa del background non ancora riconosciuto)
 		if(bb.x != 0 && bb.y != 0){
@@ -473,7 +477,6 @@ bool FrameAnalyzer::processFrame() {
                             char c = (char)res[res.size()-1];
                             if( (c>48 && c<57) && res.compare("wave1") != 0 && res.compare("wave2") != 0){
                                 res = res.substr(0, res.size()-1);
-                                cout << res << endl;
 							}
 
                             stringstream ss;
@@ -483,14 +486,14 @@ bool FrameAnalyzer::processFrame() {
 								ok++;
 								tot_classified++;
                                 if(tot_classified!=0 /*&& (getCurrentFramePos() == getFrameCount())*/){
-                                    ss << "CORRETTO:\t" << ok << "/" << tot_classified << "\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
+                                    ss << "CORRETTO \t SCORE: " << ok << "/" << tot_classified << ",\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
                                 }
                                 printLog("out_log.txt", res, performance[getCurrentFramePos()-(windowSize/2)]);
 							}
                             else if(res.compare(performance[getCurrentFramePos()-(windowSize/2)]) != 0){
                                 correctClassification = false;
 								tot_classified++;
-                                ss << "ERRORE" << "\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
+                                ss << "ERRORE   \t SCORE: " << ok << "/" << tot_classified << ",\t" << ((double)ok/(double)tot_classified)*100 << " %" << endl << endl;
                                 printLog("out_log.txt", res, performance[getCurrentFramePos()-(windowSize/2)]);
 							}
 
