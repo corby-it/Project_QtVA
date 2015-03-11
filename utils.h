@@ -168,10 +168,14 @@ void writeFeatureVectorToFile (std::string category, std::string outFileName, st
 //    out.close();
 }
 
-void fillGroundTruth(std::vector<std::string>& performance, std::string filename, std::string groundTruth){
+int fillGroundTruth(std::vector<std::string>& performance, std::string filename, std::string groundTruth){
+
+    int totAction = 0;
+    std::string tmp;
+    bool first = true;
 
     // Get person Name
-    string file_name = filename;
+    std::string file_name = filename;
     file_name = file_name.substr(file_name.find_last_of("\\")+1, file_name.length()-file_name.find_last_of("\\")-5);
     int idx = file_name.find_last_of("_") + 1;
     string personName = file_name.substr(idx, file_name.length()-idx);
@@ -193,13 +197,30 @@ void fillGroundTruth(std::vector<std::string>& performance, std::string filename
         string aName = token;
 
         std::getline(ss, token, '|');
-        string fNum = token;
+        string fNum = token;      
 
-        if(pName.compare(personName)==0)
+
+        if(pName.compare(personName)==0){
+            totAction++;
+
             for(int i=0; i<atoi(fNum.c_str()); ++i)
                 performance.push_back(aName);
 
+//            if(first){
+//                tmp = aName;
+//                first = false;
+//            }
+//            else{
+//                if(tmp.compare(aName) != 0){
+//                    totAction++;
+//                    tmp = nAction;
+//                }
+//            }
+
+        }
+
     }
+    return totAction;
 }
 
 

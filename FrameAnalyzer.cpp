@@ -43,6 +43,7 @@ FrameAnalyzer::FrameAnalyzer(string videoFilename, std::string C, int mog)
         result = "nullo";
         correctClassification = false;
         correctPerc = 0;
+        recall = 0;
 
         outputBuffer = "";
 
@@ -147,7 +148,7 @@ FrameAnalyzer::FrameAnalyzer(string videoFilename, std::string C, int mog)
 		tot_classified = 0;
 
 		//Creo vettore con etichette per prestazioni
-        fillGroundTruth(performance, filename, "groundTruth.txt");
+        totActions = fillGroundTruth(performance, filename, "groundTruth.txt");
 
 }
 
@@ -204,6 +205,10 @@ Mat& FrameAnalyzer::getHistoX(){
 
 Mat& FrameAnalyzer::getHistoY(){
     return histoY;
+}
+
+Mat& FrameAnalyzer::getBB(){
+    return BB;
 }
 
 QString FrameAnalyzer::getCurrentClass(){
@@ -439,7 +444,8 @@ bool FrameAnalyzer::processFrame() {
 		Rect bb = boundingRect(nonZeroCoordinates);		
 		//Controllo che il bb non abbia preso troppo frame (a causa del background non ancora riconosciuto)
 		if(bb.x != 0 && bb.y != 0){
-			Mat boundingBox = fgMaskMOG(bb).clone();
+            Mat boundingBox = fgMaskMOG(bb).clone();
+            BB = boundingBox.clone();
 			rectangle(frameDrawn,bb,Scalar(255,255,255),1);
 
 			// -------------------- CALCOLO DELL'ISTOGRAMMA--------------------------------

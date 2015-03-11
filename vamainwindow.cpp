@@ -26,6 +26,8 @@ VAMainWindow::VAMainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::VA
 
     progressLabel = new QLabel("Open a video file...");
 
+    videoEnded = false;
+
     progressBar = new QProgressBar();
     progressBar->setMaximum(100);
     progressBar->setValue(0);
@@ -96,6 +98,11 @@ void VAMainWindow::onButtonStartProcessingClicked()
 
     ui->buttonStopProcessing->setEnabled(true);
     ui->buttonStartProcessing->setEnabled(false);
+
+    if(videoEnded){
+        ui->historylist->clear();
+        videoEnded = false;
+    }
 }
 
 void VAMainWindow::onButtonStopProcessingClicked()
@@ -123,6 +130,8 @@ void VAMainWindow::processStep(){
         ui->buttonStopProcessing->setEnabled(false);
         ui->editLk->setEnabled(true);
 
+        videoEnded = true;
+
         // reinizializzo il frameAnalyzer con lo stesso video, così può ripartire
         frameAnalyzer = new FrameAnalyzer(selectedFile);
 
@@ -140,7 +149,23 @@ void VAMainWindow::processStep(){
         ui->labelClass->setText(frameAnalyzer->getCurrentClass());
     }
 
+    QList<QListWidgetItem *> items = ui->historylist->findItems(QString("*"), Qt::MatchWrap | Qt::MatchWildcard);
+
+    ui->labelRecall->setText(QString::number(((double)items.size() / frameAnalyzer->totActions) * 100, 'f', 2) + "%");
     ui->labelPerc->setText(QString::number(frameAnalyzer->getCurrentPerc(), 'f', 2) + "%");
+
+    if(correct){
+        bool add = true;
+        foreach(QListWidgetItem *item, items){
+            if(item->text().compare(frameAnalyzer->getCurrentClass()) == 0){
+                add = false;
+                break;
+            }
+        }
+
+        if(add)
+            ui->historylist->addItem(frameAnalyzer->getCurrentClass());
+    }
 
     if(!frameAnalyzer->getOutputBuffer().isEmpty())
         ui->editConsole->appendPlainText(frameAnalyzer->getOutputBuffer());
@@ -153,6 +178,7 @@ void VAMainWindow::processStep(){
     Mat& frameDrawn = frameAnalyzer->getCurrentFrameDrawn();
     Mat& histoX = frameAnalyzer->getHistoX();
     Mat& histoY = frameAnalyzer->getHistoY();
+    Mat& BB = frameAnalyzer->getBB();
 
     QPixmap pixFrame = cvMatToQPixmap(frame);
     QPixmap pixFGMask = cvMatToQPixmap(fgMask);
@@ -160,6 +186,7 @@ void VAMainWindow::processStep(){
     QPixmap pixFrameDrawn = cvMatToQPixmap(frameDrawn);
     QPixmap pixHistoX = cvMatToQPixmap(histoX);
     QPixmap pixHistoY = cvMatToQPixmap(histoY);
+    QPixmap pixBB = cvMatToQPixmap(BB);
 
     if(pixFrame.isNull())
         ui->labelFrame->setText("Immagine NULL");
@@ -175,6 +202,11 @@ void VAMainWindow::processStep(){
         ui->labelFrameResized->setText("Immagine NULL");
     else
         ui->labelFrameResized->setPixmap(pixFrameResized.scaled(ui->labelFrameResized->size(),Qt::KeepAspectRatio));
+
+    if(pixBB.isNull())
+        ui->labelBB->setText("Immagine NULL");
+    else
+        ui->labelBB->setPixmap(pixBB.scaled(ui->labelBB->size(),Qt::KeepAspectRatio));
 
     if(pixFrameDrawn.isNull())
         ui->labelPD->setText("Immagine NULL");

@@ -48,6 +48,8 @@ private:
     QProgressBar *progressBar;
 
     std::string selectedFile;
+
+    bool videoEnded;
 };
 
 #endif // VAMAINWINDOW_H
