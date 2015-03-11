@@ -210,11 +210,14 @@ public:
 
         labelBB = new QLabel(boxFrameResized);
         labelBB->setObjectName(QStringLiteral("labelBB"));
-        labelBB->setMinimumSize(QSize(0, 150));
-        labelBB->setMaximumSize(QSize(16777215, 150));
+        labelBB->setEnabled(true);
+        sizePolicy.setHeightForWidth(labelBB->sizePolicy().hasHeightForWidth());
+        labelBB->setSizePolicy(sizePolicy);
+        labelBB->setMinimumSize(QSize(130, 180));
+        labelBB->setMaximumSize(QSize(130, 180));
         labelBB->setStyleSheet(QStringLiteral("background-color: rgb(0, 0, 0);"));
 
-        horizontalLayout_3->addWidget(labelBB);
+        horizontalLayout_3->addWidget(labelBB, 0, Qt::AlignHCenter);
 
 
         gridLayout->addWidget(boxFrameResized, 0, 2, 1, 1);
@@ -415,7 +418,7 @@ public:
         labelFrame->setText(QApplication::translate("VAMainWindow", "TextLabel", 0));
         boxBs->setTitle(QApplication::translate("VAMainWindow", "Background Subtraction", 0));
         labelBS->setText(QApplication::translate("VAMainWindow", "TextLabel", 0));
-        boxFrameResized->setTitle(QApplication::translate("VAMainWindow", "Frame Resized", 0));
+        boxFrameResized->setTitle(QApplication::translate("VAMainWindow", "Frame Resized and Bounding Box", 0));
         labelFrameResized->setText(QString());
         labelBB->setText(QString());
         boxOptions->setTitle(QApplication::translate("VAMainWindow", "Output", 0));
