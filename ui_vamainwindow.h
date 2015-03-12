@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vamainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.4.0
+** Created by: Qt User Interface Compiler version 5.2.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -205,6 +205,7 @@ public:
         labelFrameResized->setObjectName(QStringLiteral("labelFrameResized"));
         labelFrameResized->setStyleSheet(QStringLiteral("background-color: rgba(0, 0, 0, 0);"));
         labelFrameResized->setScaledContents(false);
+        labelFrameResized->setAlignment(Qt::AlignCenter);
 
         horizontalLayout_3->addWidget(labelFrameResized);
 
@@ -216,6 +217,7 @@ public:
         labelBB->setMinimumSize(QSize(130, 180));
         labelBB->setMaximumSize(QSize(130, 180));
         labelBB->setStyleSheet(QStringLiteral("background-color: rgb(0, 0, 0);"));
+        labelBB->setAlignment(Qt::AlignCenter);
 
         horizontalLayout_3->addWidget(labelBB, 0, Qt::AlignHCenter);
 

@@ -167,6 +167,9 @@
          <property name="scaledContents">
           <bool>false</bool>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
         </widget>
        </item>
        <item alignment="Qt::AlignHCenter">
@@ -197,6 +200,9 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
